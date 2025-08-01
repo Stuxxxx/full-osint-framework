@@ -1,0 +1,12 @@
+{
+  "timestamp": "2025-06-30 22:34:31",
+  "level": "info",
+  "message": "Yandex Search Service initialisé en mode SCRAPING (Puppeteer)",
+  "service": "telegram-intelligence-scraper"
+}
+{
+  "timestamp": "2025-06-30 22:49:55",
+  "level": "info",
+  "message": "Yandex Search Service initialisé en mode SCRAPING (Puppeteer)",
+  "service": "telegram-intelligence-scraper"
+}

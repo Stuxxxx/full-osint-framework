@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Intelligence Scraper</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <div class="bg-pattern"></div>
+    
+    <div class="container">
+        <!-- Header unique -->
+        <div class="header">
+            <h1>🕵️ Telegram Intelligence Scraper</h1>
+            <p>Recherche exhaustive et analyse des mentions Telegram</p>
+            
+            <div class="api-status" id="apiStatus">
+                <div class="api-indicator" id="indicator-telegram">
+                    <span>🔴</span> Telegram Bot API
+                </div>
+                <div class="api-indicator" id="indicator-google">
+                    <span>🔴</span> Google Search API
+                </div>
+                <div class="api-indicator" id="indicator-bing">
+                    <span>🔴</span> Bing Search API
+                </div>
+                <div class="api-indicator" id="indicator-social">
+                    <span>🔴</span> Social Media APIs
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulaire de recherche unique -->
+        <div class="main-panel">
+            <form class="search-form" id="searchForm">
+                <div class="input-group">
+                    <label for="username">🎯 Utilisateur cible</label>
+                    <input type="text" id="username" placeholder="Nom d'utilisateur (avec ou sans @)" required>
+                    <div class="input-validation" id="usernameValidation"></div>
+                </div>
+
+                <div class="search-options">
+                    <div class="option-group">
+                        <h4>🔍 Moteurs de recherche</h4>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="searchTelegramApi" checked>
+                            <label for="searchTelegramApi">Telegram API</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="searchGoogle">
+                            <label for="searchGoogle">Google Search</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="searchBing">
+                            <label for="searchBing">Bing Search</label>
+                        </div>
+                    </div>
+
+                    <div class="option-group">
+                        <h4>🌐 Réseaux sociaux</h4>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="searchSocial" checked>
+                            <label for="searchSocial">Social Media (Reddit, Twitter, Discord)</label>
+                        </div>
+                        <div class="social-sub-options" id="socialSubOptions" style="margin-left: 20px; display: none;">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="searchReddit" checked>
+                                <label for="searchReddit">Reddit</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="searchTwitter">
+                                <label for="searchTwitter">Twitter/X</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="searchDiscord">
+                                <label for="searchDiscord">Discord</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="searchFacebook">
+                                <label for="searchFacebook">Facebook</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="deepSearch">
+                                <label for="deepSearch">Recherche approfondie</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="option-group">
+                        <h4>🔬 Options avancées</h4>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="aiAnalysis">
+                            <label for="aiAnalysis">Analyse IA</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="sentimentAnalysis" checked>
+                            <label for="sentimentAnalysis">Analyse de sentiment</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="telegramMentions">
+                            <label for="telegramMentions">Recherche mentions Telegram spécialisée</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="maxResults">📊 Nombre de résultats</label>
+                    <select id="maxResults">
+                        <option value="5">5 résultats</option>
+                        <option value="10" selected>10 résultats</option>
+                        <option value="25">25 résultats</option>
+                        <option value="50">50 résultats</option>
+                        <option value="100">100 résultats</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="search-btn" id="searchBtn">
+                    🚀 Lancer la recherche
+                </button>
+            </form>
+        </div>
+
+        <!-- Section de progression -->
+        <div class="progress-section" id="progressSection" style="display: none;">
+            <h3>📈 Progression de la recherche</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div id="progressText">Initialisation...</div>
+            <div class="progress-details" id="progressDetails">
+                <div class="progress-step" id="step-validation">✋ Validation des paramètres</div>
+                <div class="progress-step" id="step-social">🌐 Recherche réseaux sociaux</div>
+                <div class="progress-step" id="step-search">🔍 Recherche moteurs</div>
+                <div class="progress-step" id="step-analysis">🤖 Analyse des résultats</div>
+                <div class="progress-step" id="step-completion">✅ Finalisation</div>
+            </div>
+        </div>
+
+        <!-- Messages d'erreur -->
+        <div class="error-message" id="errorMessage" style="display: none;"></div>
+
+        <!-- Section des résultats -->
+        <div class="results-section" id="resultsSection" style="display: none;">
+            <div class="results-header">
+                <h2>🎯 Résultats de la recherche</h2>
+                <div class="results-actions">
+                    <span class="results-count" id="resultsCount">0 résultats</span>
+                    <button class="export-btn" onclick="exportResults('json')">📁 JSON</button>
+                    <button class="export-btn" onclick="exportResults('csv')">📊 CSV</button>
+                    <button class="export-btn" onclick="generateReport()">📋 Rapport</button>
+                </div>
+            </div>
+
+            <!-- Statistiques -->
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalResults">0</div>
+                    <div class="stat-label">Total trouvé</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="groupsFound">0</div>
+                    <div class="stat-label">Groupes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="channelsFound">0</div>
+                    <div class="stat-label">Canaux</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="usersFound">0</div>
+                    <div class="stat-label">Utilisateurs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="avgConfidence">0%</div>
+                    <div class="stat-label">Confiance moyenne</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="searchTime">0s</div>
+                    <div class="stat-label">Temps de recherche</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="verifiedResults">0</div>
+                    <div class="stat-label">Vérifiés</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="socialResults">0</div>
+                    <div class="stat-label">Social Media</div>
+                </div>
+            </div>
+
+            <!-- Filtres des résultats -->
+            <div class="results-filters" id="resultsFilters">
+                <h4>🔧 Filtres</h4>
+                <div class="filter-row">
+                    <select id="filterType">
+                        <option value="">Tous les types</option>
+                        <option value="group">Groupes</option>
+                        <option value="channel">Canaux</option>
+                        <option value="user">Utilisateurs</option>
+                        <option value="mention">Mentions</option>
+                        <option value="discussion">Discussions</option>
+                    </select>
+                    <select id="filterSource">
+                        <option value="">Toutes les sources</option>
+                        <option value="reddit">Reddit</option>
+                        <option value="twitter">Twitter</option>
+                        <option value="discord">Discord</option>
+                        <option value="google">Google</option>
+                        <option value="bing">Bing</option>
+                    </select>
+                    <input type="range" id="filterConfidence" min="0" max="100" value="0" title="Confiance minimale">
+                    <span id="confidenceValue">0%</span>
+                    <input type="text" id="filterKeyword" placeholder="Mot-clé...">
+                    <button onclick="applyFilters()" class="filter-btn">Filtrer</button>
+                    <button onclick="clearFilters()" class="filter-btn secondary">Effacer</button>
+                </div>
+            </div>
+
+            <!-- Grille des résultats -->
+            <div class="results-grid" id="resultsGrid"></div>
+        </div>
+
+        <!-- Modal d'analyse détaillée -->
+        <div class="modal" id="analysisModal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>🔍 Analyse détaillée</h3>
+                    <button class="modal-close" onclick="closeAnalysisModal()">&times;</button>
+                </div>
+                <div class="modal-body" id="analysisModalBody">
+                    <!-- Contenu dynamique -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
