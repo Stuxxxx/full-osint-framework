@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Framework OSINT modulaire complet - Intelligence gathering et analyse multi-sources" />
+  <meta name="keywords" content="OSINT, intelligence, investigation, Telegram, social media, framework" />
+  <meta name="author" content="OSINT Framework Team" />
+  
+  <!-- Préchargement des polices -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Favicon et icônes -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/manifest.json" />
+  
+  <!-- Meta pour PWA -->
+  <meta name="theme-color" content="#0a0a0f" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Full OSINT Framework v2.0" />
+  <meta property="og:description" content="Framework OSINT modulaire complet pour l'intelligence gathering" />
+  <meta property="og:image" content="/og-image.png" />
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:title" content="Full OSINT Framework v2.0" />
+  <meta property="twitter:description" content="Framework OSINT modulaire complet pour l'intelligence gathering" />
+  <meta property="twitter:image" content="/twitter-image.png" />
+  
+  <title>OSINT Framework v2.0 - Command Center</title>
+  
+  <style>
+    /* Styles de chargement initial pour éviter le FOUC */
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #0a0a0f;
+      color: #ffffff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow-x: hidden;
+    }
+    
+    /* Loader initial */
+    #initial-loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease-out;
+    }
+    
+    .loader-logo {
+      font-size: 2.5rem;
+      font-weight: bold;
+      background: linear-gradient(90deg, #00ffff 0%, #ff00ff 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 2rem;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+    
+    .loader-spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(0, 255, 255, 0.1);
+      border-top: 3px solid #00ffff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 1rem;
+    }
+    
+    .loader-text {
+      color: #666;
+      font-size: 0.9rem;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    @keyframes glow {
+      0% { text-shadow: 0 0 20px rgba(0, 255, 255, 0.3); }
+      100% { text-shadow: 0 0 30px rgba(0, 255, 255, 0.6); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+    
+    /* Effet de particules cyber */
+    .cyber-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+    
+    .cyber-particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: #00ffff;
+      border-radius: 50%;
+      animation: float 10s infinite linear;
+      opacity: 0.3;
+    }
+    
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) translateX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.3;
+      }
+      90% {
+        opacity: 0.3;
+      }
+      100% {
+        transform: translateY(-10vh) translateX(100px);
+        opacity: 0;
+      }
+    }
+    
+    /* Cache le loader une fois React chargé */
+    .loaded #initial-loader {
+      opacity: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Background cyber avec particules -->
+  <div class="cyber-bg">
+    <!-- Les particules seront générées par JavaScript -->
+  </div>
+  
+  <!-- Loader initial -->
+  <div id="initial-loader">
+    <div class="loader-logo">OSINT FRAMEWORK</div>
+    <div class="loader-spinner"></div>
+    <div class="loader-text">Initialisation du système...</div>
+  </div>
+  
+  <!-- Point de montage React -->
+  <div id="root"></div>
+  
+  <script>
+    // Génération des particules cyber
+    function createCyberParticles() {
+      const container = document.querySelector('.cyber-bg');
+      const particleCount = 50;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'cyber-particle';
+        
+        // Position et timing aléatoires
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 10 + 's';
+        particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+        
+        // Couleurs aléatoires (cyber palette)
+        const colors = ['#00ffff', '#ff00ff', '#00ff00'];
+        particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+        
+        container.appendChild(particle);
+      }
+    }
+    
+    // Suppression du loader quand React est chargé
+    function removeLoader() {
+      document.body.classList.add('loaded');
+      setTimeout(() => {
+        const loader = document.getElementById('initial-loader');
+        if (loader) {
+          loader.remove();
+        }
+      }, 500);
+    }
+    
+    // Initialisation
+    document.addEventListener('DOMContentLoaded', () => {
+      createCyberParticles();
+      
+      // Supprimer le loader après 3 secondes maximum
+      setTimeout(removeLoader, 3000);
+    });
+    
+    // Configuration globale pour le développement
+    if (import.meta.env?.DEV) {
+      window.__OSINT_FRAMEWORK__ = {
+        version: '2.0.0',
+        mode: 'development',
+        debug: true
+      };
+    }
+    
+    // Gestion des erreurs de chargement
+    window.addEventListener('error', (e) => {
+      console.error('Erreur de chargement:', e);
+      
+      // Afficher une erreur si le JavaScript ne se charge pas
+      if (e.filename && e.filename.includes('main')) {
+        document.getElementById('initial-loader').innerHTML = `
+          <div style="text-align: center; color: #ff0040;">
+            <h2>❌ Erreur de Chargement</h2>
+            <p>Impossible de charger l'application.</p>
+            <button onclick="location.reload()" style="
+              padding: 10px 20px;
+              background: #00ffff;
+              color: #000;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+              margin-top: 20px;
+            ">
+              Recharger
+            </button>
+          </div>
+        `;
+      }
+    });
+  </script>
+  
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>
